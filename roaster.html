@@ -13,6 +13,7 @@
   --reg-bg:#e8f5e9;--reg-text:#2e7d32;--reg-b:#a5d6a7;
   --full-bg:#e3f2fd;--full-text:#1565c0;--full-b:#90caf9;
   --leave-bg:#fce4ec;--leave-text:#c62828;--leave-b:#f48fb1;
+  --pdo-bg:#fff3e0;--pdo-text:#e65100;--pdo-b:#ffb74d;
   --font:'Segoe UI','Arial',sans-serif;
 }
 body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;padding:1.5rem;}
@@ -30,6 +31,24 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .hospital-header h1{font-size:1rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.2rem;}
 .hospital-header h2{font-size:0.8rem;font-weight:400;letter-spacing:0.06em;text-transform:uppercase;opacity:0.8;margin-bottom:0.15rem;}
 .hospital-header h3{font-size:0.75rem;font-weight:600;letter-spacing:0.05em;opacity:0.9;}
+ 
+/* Summary bar */
+.summary-bar{
+  display:flex;align-items:stretch;gap:0;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:4px;margin-bottom:1rem;overflow:hidden;
+}
+.summary-item{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:0.6rem 1.2rem;border-right:1px solid var(--border);
+  min-width:100px;
+}
+.summary-item:last-child{border-right:none;}
+.summary-item .s-val{font-size:1.4rem;font-weight:700;line-height:1;color:var(--header);}
+.summary-item .s-lbl{font-size:0.65rem;color:var(--muted);margin-top:3px;letter-spacing:0.04em;text-transform:uppercase;}
+.summary-item.pdo .s-val{color:var(--pdo-text);}
+.summary-item.full .s-val{color:#1565c0;}
+.summary-item.on-duty .s-val{color:#2e7d32;}
  
 .toolbar{display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;flex-wrap:wrap;background:var(--surface);padding:0.65rem 1rem;border:1px solid var(--border);border-radius:4px;}
 .month-nav{display:flex;align-items:center;gap:0.6rem;}
@@ -61,12 +80,11 @@ thead th.left{text-align:left;}
 tbody tr.sunday{background:var(--sunday);}
 tbody tr.today-row{background:var(--today);}
  
-/* Bold date+day when any slot is Full Day */
 tbody tr.has-full td.date-cell,
 tbody tr.has-full td.day-cell{font-weight:700;color:#1565c0;}
  
-td.date-cell{padding:0.4rem 0.6rem;white-space:nowrap;font-size:0.75rem;font-weight:400;text-align:center;min-width:70px;transition:font-weight 0.1s;}
-td.day-cell{padding:0.4rem 0.6rem;white-space:nowrap;font-size:0.75rem;text-align:left;min-width:80px;transition:font-weight 0.1s;}
+td.date-cell{padding:0.4rem 0.6rem;white-space:nowrap;font-size:0.75rem;font-weight:400;text-align:center;min-width:70px;}
+td.day-cell{padding:0.4rem 0.6rem;white-space:nowrap;font-size:0.75rem;text-align:left;min-width:80px;}
 tr.sunday td.day-cell{font-weight:700;}
 td.duty-cell{padding:3px 4px;text-align:center;min-width:220px;}
 .duty-wrap{display:flex;gap:4px;align-items:center;justify-content:center;}
@@ -77,15 +95,40 @@ select.shift-select option{background:#fff;color:var(--text);}
 select.shift-select.s-REG{background:var(--reg-bg);color:var(--reg-text);border-color:var(--reg-b);}
 select.shift-select.s-FULL{background:var(--full-bg);color:var(--full-text);border-color:var(--full-b);font-weight:700;}
 select.shift-select.s-LEAVE{background:var(--leave-bg);color:var(--leave-text);border-color:var(--leave-b);}
-td.note-cell{padding:3px 6px;min-width:160px;}
+ 
+/* PDO cell */
+td.pdo-cell{padding:4px 6px;min-width:160px;vertical-align:top;}
+.pdo-empty{color:#ccc;font-size:0.68rem;padding:2px 0;}
+.pdo-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  background:var(--pdo-bg);color:var(--pdo-text);
+  border:1px solid var(--pdo-b);border-radius:3px;
+  font-size:0.68rem;padding:2px 7px;margin:2px 2px;
+  white-space:nowrap;
+}
+.pdo-count{
+  display:inline-block;
+  background:var(--pdo-text);color:#fff;
+  border-radius:50%;width:16px;height:16px;
+  font-size:0.6rem;font-weight:700;
+  line-height:16px;text-align:center;
+  margin-right:2px;
+}
+ 
+td.note-cell{padding:3px 6px;min-width:140px;}
 input.note-input{border:none;background:transparent;font-family:var(--font);font-size:0.72rem;color:var(--text);width:100%;outline:none;padding:0.25rem 0.1rem;}
 input.note-input::placeholder{color:#bbb;}
 input.note-input:focus{background:#fffde7;}
-.footer-note{margin-top:0.75rem;font-size:0.7rem;color:var(--muted);font-style:italic;text-align:center;padding:0.4rem;border-top:1px solid var(--border);background:var(--surface);}
+ 
+.footer-note{margin-top:0.75rem;font-size:0.7rem;color:var(--muted);padding:0.4rem;border-top:1px solid var(--border);background:var(--surface);}
 .legend{display:flex;gap:1rem;margin-top:1rem;flex-wrap:wrap;font-size:0.7rem;color:var(--muted);}
 .legend-item{display:flex;align-items:center;gap:5px;}
 .legend-box{width:12px;height:12px;border-radius:2px;border:1px solid;}
-@media print{body{padding:0;}.toolbar,.doctor-chips,.legend,#toast,#dblog{display:none!important;}table{font-size:0.7rem;}}
+@media print{
+  body{padding:0;}
+  .toolbar,.doctor-chips,.legend,#toast,#dblog,.summary-bar{display:none!important;}
+  table{font-size:0.7rem;}
+}
 </style>
 </head>
 <body>
@@ -101,6 +144,26 @@ input.note-input:focus{background:#fffde7;}
   <h1>ACS Medical College &amp; Hospital</h1>
   <h2>Department of OBG</h2>
   <h3 id="rosterTitle"></h3>
+</div>
+ 
+<!-- Summary bar -->
+<div class="summary-bar" id="summaryBar">
+  <div class="summary-item">
+    <div class="s-val" id="sumTotal">—</div>
+    <div class="s-lbl">Total Staff</div>
+  </div>
+  <div class="summary-item on-duty">
+    <div class="s-val" id="sumOnDuty">—</div>
+    <div class="s-lbl">On Duty Today</div>
+  </div>
+  <div class="summary-item full">
+    <div class="s-val" id="sumFull">—</div>
+    <div class="s-lbl">Full Duty Today</div>
+  </div>
+  <div class="summary-item pdo">
+    <div class="s-val" id="sumPdo">—</div>
+    <div class="s-lbl">PDO Today</div>
+  </div>
 </div>
  
 <div class="doctor-chips" id="doctorChips"></div>
@@ -144,8 +207,9 @@ input.note-input:focus{background:#fffde7;}
  
 <div class="legend">
   <div class="legend-item"><div class="legend-box" style="background:var(--reg-bg);border-color:var(--reg-b)"></div>Regular</div>
-  <div class="legend-item"><div class="legend-box" style="background:var(--full-bg);border-color:var(--full-b)"></div>Full Day <strong style="font-size:0.65rem;color:#1565c0">(bold date)</strong></div>
+  <div class="legend-item"><div class="legend-box" style="background:var(--full-bg);border-color:var(--full-b)"></div>Full Day <strong style="font-size:0.65rem;color:#1565c0">(date turns blue+bold)</strong></div>
   <div class="legend-item"><div class="legend-box" style="background:var(--leave-bg);border-color:var(--leave-b)"></div>Leave</div>
+  <div class="legend-item"><div class="legend-box" style="background:var(--pdo-bg);border-color:var(--pdo-b)"></div>PDO (Post Duty Off — next day after Full)</div>
 </div>
  
 <script>
@@ -172,62 +236,20 @@ async function api(method, table, params='', body=null) {
   return data;
 }
  
-// ── March 2026 seed data (from image) ─────────────────────────
-// [date, s1_doctor, s1_shift, s2_doctor, s2_shift, note]
-// Bold names in image = FULL, normal = REG
-const MARCH_DATA = [
-  ['2026-03-01','Dr.Divya','REG','Dr.Anuthomas','FULL','Thiruverkadu: 3.3.26-Dr.Sharanya'],
-  ['2026-03-02','Dr.Ramani','REG','Dr.Abilashini','REG','Thiruverkadu: 10.3.26-Dr.Ganga'],
-  ['2026-03-03','Dr.Rathna','REG','Dr.Prathibha','REG','Thiruverkadu: 17.3.26-Dr.Sharanya'],
-  ['2026-03-04','Dr.Varshini','REG','Dr.Sandhya','REG','Thiruverkadu: 24.3.26-Dr.Sharanya'],
-  ['2026-03-05','Dr.Sharanya','REG','Dr.Yasmine','REG',''],
-  ['2026-03-06','Dr.Ramya','REG','Dr.Devipriya','REG',''],
-  ['2026-03-07','Dr.Manju','REG','Dr.Anuthomas','REG',''],
-  ['2026-03-08','Dr.Ganga','FULL','Dr.Rathna','FULL','Parivakam camp Thursday: 5.3.26-Dr.Anuthomas'],
-  ['2026-03-09','Dr.Varshini','REG','Dr.Abilashini','REG','Parivakam: 5.3.26-Dr.Anuthomas'],
-  ['2026-03-10','Dr.Devipriya','REG','Dr.Divya','FULL','Parivakam: 12.3.26-Dr.Sandhya'],
-  ['2026-03-11','Dr.Sharanya','REG','Dr.Ramya','REG','Parivakam: 26.3.26-Dr.Ramani'],
-  ['2026-03-12','Dr.Ramani','REG','Dr.Yasmine','REG',''],
-  ['2026-03-13','Dr.Manju','REG','Dr.Sandhya','REG',''],
-  ['2026-03-14','Dr.Prathibha','REG','Dr.Abilashini','REG',''],
-  ['2026-03-15','Dr.Yasmine','FULL','Dr.Ramya','FULL',''],
-  ['2026-03-16','Dr.Divya','REG','Dr.Anuthomas','REG',''],
-  ['2026-03-17','Dr.Ganga','REG','Dr.Rathna','REG',''],
-  ['2026-03-18','Dr.Varshini','REG','Dr.Yasmine','REG',''],
-  ['2026-03-19','Dr.Ramya','REG','Dr.Sharanya','REG',''],
-  ['2026-03-20','Dr.Ramani','REG','Dr.Devipriya','REG',''],
-  ['2026-03-21','Dr.Manju','REG','Dr.Divya','REG',''],
-  ['2026-03-22','Dr.Varshini','FULL','Dr.Prathibha','FULL',''],
-  ['2026-03-23','Dr.Rathna','REG','Dr.Sandhya','REG',''],
-  ['2026-03-24','Dr.Yasmine','REG','Dr.Anuthomas','REG',''],
-  ['2026-03-25','Dr.Vinitha','REG','Dr.Ramya','REG',''],
-  ['2026-03-26','Dr.Manju','REG','Dr.Devipriya','REG',''],
-  ['2026-03-27','Dr.Abilashini','REG','Dr.Ganga','REG',''],
-  ['2026-03-28','Dr.Sharanya','FULL','Dr.Ramani','FULL',''],
-  ['2026-03-29','Dr.Vinitha','FULL','Dr.Sandhya','FULL',''],
-  ['2026-03-30','Dr.Rathna','REG','Dr.Prathibha','REG',''],
-  ['2026-03-31','Dr.Ganga','FULL','Dr.Anuthomas','REG',''],
-];
- 
-const MARCH_DOCTORS = ['Dr.Divya','Dr.Ramani','Dr.Rathna','Dr.Varshini','Dr.Sharanya',
-  'Dr.Ramya','Dr.Manju','Dr.Ganga','Dr.Devipriya','Dr.Abilashini',
-  'Dr.Prathibha','Dr.Yasmine','Dr.Sandhya','Dr.Anuthomas','Dr.Vinitha'];
- 
-// ── Constants ─────────────────────────────────────────────────
 const SHIFTS       = ['—','REG','FULL','LEAVE'];
 const SHIFT_LABELS = {'—':'—','REG':'Regular','FULL':'Full Day','LEAVE':'Leave'};
 const MONTHS       = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DAYS_SHORT   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
  
 let doctors   = [];
-let dutiesMap = {};
+let dutiesMap = {}; // includes prev month's last day for PDO calc on day 1
 let notesMap  = {};
  
 const now = new Date();
 let curYear  = now.getFullYear();
 let curMonth = now.getMonth();
  
-// ── UI helpers ────────────────────────────────────────────────
+// ── Helpers ───────────────────────────────────────────────────
 function toast(msg, err=false) {
   const el = document.getElementById('toast');
   el.textContent = msg;
@@ -238,9 +260,9 @@ function toast(msg, err=false) {
 function showError(ctx, err) {
   const msg = err?.message || err?.details || err?.error || JSON.stringify(err);
   document.getElementById('dblogtext').textContent =
-    'Context : ' + ctx + '\nMessage : ' + msg +
-    (err?.code ? '\nCode    : ' + err.code : '') +
-    (err?.hint ? '\nHint    : ' + err.hint : '');
+    'Context : '+ctx+'\nMessage : '+msg+
+    (err?.code ? '\nCode    : '+err.code : '')+
+    (err?.hint ? '\nHint    : '+err.hint : '');
   document.getElementById('dblog').classList.add('visible');
   document.getElementById('dbDot').className = 'status-dot offline';
   document.getElementById('dbStatus').textContent = 'DB Error';
@@ -254,8 +276,33 @@ function loader(v, msg='') {
   document.getElementById('loader').classList.toggle('hidden', !v);
   document.getElementById('loaderMsg').textContent = msg;
 }
+function fmtDate(y, m, d) {
+  return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+}
  
-// ── Data ──────────────────────────────────────────────────────
+// ── PDO calculation ───────────────────────────────────────────
+// Returns array of doctor names who are on PDO for a given date
+// Rule: if doctor had FULL duty on the previous day → PDO today
+function getPdoForDate(ds) {
+  const prev = prevDate(ds);
+  const pdoNames = [];
+  // Check both slots of previous day
+  ['s1','s2'].forEach(slot => {
+    const d = dutiesMap[prev+'_'+slot];
+    if (d && d.shift_type === 'FULL' && d.doctor_name) {
+      if (!pdoNames.includes(d.doctor_name)) pdoNames.push(d.doctor_name);
+    }
+  });
+  return pdoNames;
+}
+ 
+function prevDate(ds) {
+  const d = new Date(ds);
+  d.setDate(d.getDate() - 1);
+  return d.toISOString().slice(0,10);
+}
+ 
+// ── Data loaders ──────────────────────────────────────────────
 async function loadDoctors() {
   try {
     const data = await api('GET','doctors','select=name&order=created_at.asc');
@@ -266,76 +313,67 @@ async function loadDoctors() {
  
 async function loadMonthData() {
   const y = curYear, m = curMonth;
-  const from = `${y}-${String(m+1).padStart(2,'0')}-01`;
-  const to   = `${y}-${String(m+1).padStart(2,'0')}-${String(new Date(y,m+1,0).getDate()).padStart(2,'0')}`;
+  const days = new Date(y, m+1, 0).getDate();
+ 
+  // Also fetch last day of PREVIOUS month for PDO calc on day 1
+  const prevMonthDate = new Date(y, m, 0); // last day of prev month
+  const prevY = prevMonthDate.getFullYear();
+  const prevM = prevMonthDate.getMonth();
+  const prevD = prevMonthDate.getDate();
+  const prevDs = fmtDate(prevY, prevM, prevD);
+ 
+  const from = fmtDate(y, m, 1);
+  const to   = fmtDate(y, m, days);
+ 
   try {
-    const [dr, nr] = await Promise.all([
+    const [dr, nr, drPrev] = await Promise.all([
       api('GET','duties',`select=date,slot,doctor_name,shift_type&date=gte.${from}&date=lte.${to}`),
-      api('GET','notes', `select=date,note&date=gte.${from}&date=lte.${to}`)
+      api('GET','notes', `select=date,note&date=gte.${from}&date=lte.${to}`),
+      api('GET','duties',`select=date,slot,doctor_name,shift_type&date=eq.${prevDs}`)
     ]);
+ 
     dutiesMap = {};
-    dr.forEach(r => { dutiesMap[r.date+'_'+r.slot] = { doctor_name: r.doctor_name||'', shift_type: r.shift_type||'—' }; });
+    // Load prev month last day
+    drPrev.forEach(r => {
+      dutiesMap[r.date+'_'+r.slot] = { doctor_name: r.doctor_name||'', shift_type: r.shift_type||'—' };
+    });
+    // Load current month
+    dr.forEach(r => {
+      dutiesMap[r.date+'_'+r.slot] = { doctor_name: r.doctor_name||'', shift_type: r.shift_type||'—' };
+    });
+ 
     notesMap = {};
     nr.forEach(r => { notesMap[r.date] = r.note; });
     clearError();
   } catch(e) { showError('Loading month data', e); }
 }
  
-// ── Import March 2026 ─────────────────────────────────────────
-async function importMarch2026() {
-  if (!confirm('This will import all March 2026 data from the physical roster.\nExisting March 2026 entries will be overwritten. Continue?')) return;
+// ── Summary bar ───────────────────────────────────────────────
+function updateSummary() {
+  const todayStr = new Date().toISOString().slice(0,10);
+  const total = doctors.length;
  
-  loader(true, 'Importing doctors...');
-  try {
-    // 1. Add missing doctors
-    for (const name of MARCH_DOCTORS) {
-      if (!doctors.includes(name)) {
-        try {
-          await api('POST','doctors','',{ name });
-          doctors.push(name);
-        } catch(e) {
-          if (!e?.code?.includes('23505')) throw e; // ignore duplicate
-        }
-      }
-    }
+  // Count on duty today (any slot assigned today)
+  const todayDoctors = new Set();
+  ['s1','s2'].forEach(slot => {
+    const d = dutiesMap[todayStr+'_'+slot];
+    if (d && d.doctor_name) todayDoctors.add(d.doctor_name);
+  });
  
-    // 2. Insert duties + notes
-    let done = 0;
-    for (const [date, d1, s1, d2, s2, note] of MARCH_DATA) {
-      done++;
-      loader(true, `Saving ${date} (${done}/${MARCH_DATA.length})...`);
+  // Full duty today
+  const fullToday = new Set();
+  ['s1','s2'].forEach(slot => {
+    const d = dutiesMap[todayStr+'_'+slot];
+    if (d && d.shift_type === 'FULL' && d.doctor_name) fullToday.add(d.doctor_name);
+  });
  
-      // Slot 1
-      const ex1 = await api('GET','duties',`date=eq.${date}&slot=eq.s1&select=id`);
-      if (ex1.length) await api('PATCH','duties',`date=eq.${date}&slot=eq.s1`,{ doctor_name:d1, shift_type:s1 });
-      else            await api('POST','duties','',{ date, slot:'s1', doctor_name:d1, shift_type:s1 });
+  // PDO today
+  const pdoToday = getPdoForDate(todayStr);
  
-      // Slot 2
-      const ex2 = await api('GET','duties',`date=eq.${date}&slot=eq.s2&select=id`);
-      if (ex2.length) await api('PATCH','duties',`date=eq.${date}&slot=eq.s2`,{ doctor_name:d2, shift_type:s2 });
-      else            await api('POST','duties','',{ date, slot:'s2', doctor_name:d2, shift_type:s2 });
- 
-      // Note
-      if (note) {
-        const exn = await api('GET','notes',`date=eq.${date}&select=id`);
-        if (exn.length) await api('PATCH','notes',`date=eq.${date}`,{ note });
-        else            await api('POST','notes','',{ date, note });
-      }
-    }
- 
-    // Navigate to March 2026 and reload
-    curYear = 2026; curMonth = 2;
-    await loadMonthData();
-    loader(false);
-    clearError();
-    renderChips();
-    render();
-    toast('March 2026 imported successfully ✓');
-  } catch(e) {
-    loader(false);
-    showError('Importing March 2026', e);
-    toast('Import failed — see error above', true);
-  }
+  document.getElementById('sumTotal').textContent   = total;
+  document.getElementById('sumOnDuty').textContent  = todayDoctors.size || '0';
+  document.getElementById('sumFull').textContent    = fullToday.size || '0';
+  document.getElementById('sumPdo').textContent     = pdoToday.length || '0';
 }
  
 // ── Mutations ─────────────────────────────────────────────────
@@ -350,8 +388,9 @@ async function addDoctor() {
     doctors.push(name);
     inp.value = '';
     clearError();
-    toast(name + ' added ✓');
+    toast(name+' added ✓');
     renderChips();
+    updateSummary();
     render();
   } catch(e) { showError('Adding doctor: '+name, e); toast('Failed to add', true); }
   inp.focus();
@@ -365,6 +404,7 @@ async function removeDoctor(name) {
     clearError();
     toast(name+' removed');
     renderChips();
+    updateSummary();
     render();
   } catch(e) { showError('Removing doctor', e); toast('Remove failed', true); }
 }
@@ -396,6 +436,8 @@ function handleDocChange(sel, date, slot) {
   if (!dutiesMap[key]) dutiesMap[key] = { doctor_name:'', shift_type:'—' };
   dutiesMap[key].doctor_name = sel.value;
   saveDuty(date, slot, sel.value, dutiesMap[key].shift_type);
+  refreshPdoRow(date);
+  updateSummary();
 }
  
 function handleShiftChange(sel, date, slot) {
@@ -405,15 +447,40 @@ function handleShiftChange(sel, date, slot) {
   if (!dutiesMap[key]) dutiesMap[key] = { doctor_name:'', shift_type:'—' };
   dutiesMap[key].shift_type = val;
   saveDuty(date, slot, dutiesMap[key].doctor_name, val);
-  // Update bold class on the row immediately
+  // Update bold/blue on current row
   const row = sel.closest('tr');
-  if (row) updateRowBold(row, date);
+  if (row) {
+    const s1 = dutiesMap[date+'_s1']?.shift_type;
+    const s2 = dutiesMap[date+'_s2']?.shift_type;
+    row.classList.toggle('has-full', s1==='FULL' || s2==='FULL');
+  }
+  // Refresh PDO on next day's row
+  const nextDs = nextDate(date);
+  refreshPdoRow(nextDs);
+  updateSummary();
 }
  
-function updateRowBold(row, date) {
-  const s1 = dutiesMap[date+'_s1']?.shift_type;
-  const s2 = dutiesMap[date+'_s2']?.shift_type;
-  row.classList.toggle('has-full', s1==='FULL' || s2==='FULL');
+function nextDate(ds) {
+  const d = new Date(ds);
+  d.setDate(d.getDate()+1);
+  return d.toISOString().slice(0,10);
+}
+ 
+// Refresh just the PDO cell of a specific date row (no full re-render)
+function refreshPdoRow(ds) {
+  const row = document.querySelector(`tr[data-date="${ds}"]`);
+  if (!row) return;
+  const pdoCell = row.querySelector('.pdo-cell');
+  if (!pdoCell) return;
+  pdoCell.innerHTML = buildPdoHtml(ds);
+}
+ 
+function buildPdoHtml(ds) {
+  const names = getPdoForDate(ds);
+  if (!names.length) return '<span class="pdo-empty">—</span>';
+  return names.map(n =>
+    `<span class="pdo-badge"><span class="pdo-count">P</span>${n.replace('Dr.','Dr. ')}</span>`
+  ).join('');
 }
  
 let noteTimers = {};
@@ -423,62 +490,137 @@ function handleNoteChange(inp, date) {
   noteTimers[date] = setTimeout(() => saveNote(date, inp.value), 800);
 }
  
+// ── Import March 2026 ─────────────────────────────────────────
+const MARCH_DATA = [
+  ['2026-03-01','Dr.Divya','REG','Dr.Anuthomas','FULL','Thiruverkadu: 3.3.26-Dr.Sharanya'],
+  ['2026-03-02','Dr.Ramani','REG','Dr.Abilashini','REG','Thiruverkadu: 10.3.26-Dr.Ganga'],
+  ['2026-03-03','Dr.Rathna','REG','Dr.Prathibha','REG','Thiruverkadu: 17.3.26-Dr.Sharanya'],
+  ['2026-03-04','Dr.Varshini','REG','Dr.Sandhya','REG','Thiruverkadu: 24.3.26-Dr.Sharanya'],
+  ['2026-03-05','Dr.Sharanya','REG','Dr.Yasmine','REG',''],
+  ['2026-03-06','Dr.Ramya','REG','Dr.Devipriya','REG',''],
+  ['2026-03-07','Dr.Manju','REG','Dr.Anuthomas','REG',''],
+  ['2026-03-08','Dr.Ganga','FULL','Dr.Rathna','FULL','Parivakam camp: 5.3.26-Dr.Anuthomas'],
+  ['2026-03-09','Dr.Varshini','REG','Dr.Abilashini','REG','Parivakam: 12.3.26-Dr.Sandhya'],
+  ['2026-03-10','Dr.Devipriya','REG','Dr.Divya','FULL','Parivakam: 26.3.26-Dr.Ramani'],
+  ['2026-03-11','Dr.Sharanya','REG','Dr.Ramya','REG',''],
+  ['2026-03-12','Dr.Ramani','REG','Dr.Yasmine','REG',''],
+  ['2026-03-13','Dr.Manju','REG','Dr.Sandhya','REG',''],
+  ['2026-03-14','Dr.Prathibha','REG','Dr.Abilashini','REG',''],
+  ['2026-03-15','Dr.Yasmine','FULL','Dr.Ramya','FULL',''],
+  ['2026-03-16','Dr.Divya','REG','Dr.Anuthomas','REG',''],
+  ['2026-03-17','Dr.Ganga','REG','Dr.Rathna','REG',''],
+  ['2026-03-18','Dr.Varshini','REG','Dr.Yasmine','REG',''],
+  ['2026-03-19','Dr.Ramya','REG','Dr.Sharanya','REG',''],
+  ['2026-03-20','Dr.Ramani','REG','Dr.Devipriya','REG',''],
+  ['2026-03-21','Dr.Manju','REG','Dr.Divya','REG',''],
+  ['2026-03-22','Dr.Varshini','FULL','Dr.Prathibha','FULL',''],
+  ['2026-03-23','Dr.Rathna','REG','Dr.Sandhya','REG',''],
+  ['2026-03-24','Dr.Yasmine','REG','Dr.Anuthomas','REG',''],
+  ['2026-03-25','Dr.Vinitha','REG','Dr.Ramya','REG',''],
+  ['2026-03-26','Dr.Manju','REG','Dr.Devipriya','REG',''],
+  ['2026-03-27','Dr.Abilashini','REG','Dr.Ganga','REG',''],
+  ['2026-03-28','Dr.Sharanya','FULL','Dr.Ramani','FULL',''],
+  ['2026-03-29','Dr.Vinitha','FULL','Dr.Sandhya','FULL',''],
+  ['2026-03-30','Dr.Rathna','REG','Dr.Prathibha','REG',''],
+  ['2026-03-31','Dr.Ganga','FULL','Dr.Anuthomas','REG',''],
+];
+const MARCH_DOCTORS = ['Dr.Divya','Dr.Ramani','Dr.Rathna','Dr.Varshini','Dr.Sharanya',
+  'Dr.Ramya','Dr.Manju','Dr.Ganga','Dr.Devipriya','Dr.Abilashini',
+  'Dr.Prathibha','Dr.Yasmine','Dr.Sandhya','Dr.Anuthomas','Dr.Vinitha'];
+ 
+async function importMarch2026() {
+  if (!confirm('Import all March 2026 data from the physical roster?\nExisting entries will be overwritten.')) return;
+  loader(true,'Importing doctors...');
+  try {
+    for (const name of MARCH_DOCTORS) {
+      if (!doctors.includes(name)) {
+        try { await api('POST','doctors','',{ name }); doctors.push(name); }
+        catch(e) { if (!JSON.stringify(e).includes('23505')) throw e; }
+      }
+    }
+    let done = 0;
+    for (const [date,d1,s1,d2,s2,note] of MARCH_DATA) {
+      done++;
+      loader(true,`Saving ${date} (${done}/${MARCH_DATA.length})...`);
+      const [ex1,ex2] = await Promise.all([
+        api('GET','duties',`date=eq.${date}&slot=eq.s1&select=id`),
+        api('GET','duties',`date=eq.${date}&slot=eq.s2&select=id`)
+      ]);
+      await Promise.all([
+        ex1.length ? api('PATCH','duties',`date=eq.${date}&slot=eq.s1`,{doctor_name:d1,shift_type:s1})
+                   : api('POST','duties','',{date,slot:'s1',doctor_name:d1,shift_type:s1}),
+        ex2.length ? api('PATCH','duties',`date=eq.${date}&slot=eq.s2`,{doctor_name:d2,shift_type:s2})
+                   : api('POST','duties','',{date,slot:'s2',doctor_name:d2,shift_type:s2})
+      ]);
+      if (note) {
+        const exn = await api('GET','notes','date=eq.'+date+'&select=id');
+        exn.length ? await api('PATCH','notes','date=eq.'+date,{note})
+                   : await api('POST','notes','',{date,note});
+      }
+    }
+    curYear=2026; curMonth=2;
+    await loadMonthData();
+    loader(false); clearError(); renderChips(); updateSummary(); render();
+    toast('March 2026 imported ✓');
+  } catch(e) { loader(false); showError('Importing March 2026', e); toast('Import failed', true); }
+}
+ 
 // ── Render ────────────────────────────────────────────────────
 function changeMonth(dir) {
   curMonth += dir;
-  if (curMonth > 11) { curMonth = 0; curYear++; }
-  if (curMonth < 0)  { curMonth = 11; curYear--; }
-  loader(true, '');
-  loadMonthData().then(() => { loader(false); render(); });
+  if (curMonth > 11) { curMonth=0; curYear++; }
+  if (curMonth <  0) { curMonth=11; curYear--; }
+  loader(true,'');
+  loadMonthData().then(() => { loader(false); updateSummary(); render(); });
 }
  
 function renderChips() {
   const el = document.getElementById('doctorChips');
   el.innerHTML = doctors.length
-    ? doctors.map(d => `<div class="chip">${d}<span class="rm" onclick="removeDoctor('${esc(d)}')">✕</span></div>`).join('')
+    ? doctors.map(d=>`<div class="chip">${d}<span class="rm" onclick="removeDoctor('${esc(d)}')">✕</span></div>`).join('')
     : '<span style="font-size:0.7rem;color:#aaa">No doctors — add one above</span>';
 }
  
-function esc(s) { return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
+function esc(s){ return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
  
 function render() {
-  const y = curYear, m = curMonth;
-  const days     = new Date(y, m+1, 0).getDate();
-  const todayStr = new Date().toISOString().slice(0,10);
+  const y=curYear, m=curMonth;
+  const days=new Date(y,m+1,0).getDate();
+  const todayStr=new Date().toISOString().slice(0,10);
  
-  document.getElementById('rosterTitle').textContent = MONTHS[m]+' - '+y+' (Duty Roster)';
-  document.getElementById('monthLabel').textContent  = MONTHS[m]+' '+y;
+  document.getElementById('rosterTitle').textContent=MONTHS[m]+' - '+y+' (Duty Roster)';
+  document.getElementById('monthLabel').textContent=MONTHS[m]+' '+y;
  
-  document.getElementById('tableHead').innerHTML =
-    `<tr>
-      <th class="left" style="min-width:75px">Date</th>
-      <th class="left" style="min-width:80px">Day</th>
-      <th style="min-width:240px">Slot 1</th>
-      <th style="min-width:240px">Slot 2</th>
-      <th style="min-width:160px">Notes</th>
-    </tr>`;
+  document.getElementById('tableHead').innerHTML=`<tr>
+    <th class="left" style="min-width:70px">Date</th>
+    <th class="left" style="min-width:75px">Day</th>
+    <th style="min-width:220px">Slot 1</th>
+    <th style="min-width:220px">Slot 2</th>
+    <th style="min-width:180px">PDO Staff</th>
+    <th style="min-width:130px">Notes</th>
+  </tr>`;
  
-  const docBase   = '<option value="">— Doctor —</option>'+doctors.map(d=>`<option value="${d}">${d}</option>`).join('');
-  const mkDoc     = v => v ? docBase.replace(`value="${v}"`,`value="${v}" selected`) : docBase;
-  const mkShift   = v => SHIFTS.map(s=>`<option value="${s}"${s===v?' selected':''}>${SHIFT_LABELS[s]}</option>`).join('');
-  const sCls      = v => v && v!=='—' ? ' s-'+v : '';
+  const docBase='<option value="">— Doctor —</option>'+doctors.map(d=>`<option value="${d}">${d}</option>`).join('');
+  const mkDoc  =v=>v?docBase.replace(`value="${v}"`,`value="${v}" selected`):docBase;
+  const mkShift=v=>SHIFTS.map(s=>`<option value="${s}"${s===v?' selected':''}>${SHIFT_LABELS[s]}</option>`).join('');
+  const sCls   =v=>v&&v!=='—'?' s-'+v:'';
  
-  let html = '';
-  for (let day = 1; day <= days; day++) {
-    const dt   = new Date(y, m, day);
-    const dow  = dt.getDay();
-    const ds   = `${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-    const d1   = dutiesMap[ds+'_s1'] || { doctor_name:'', shift_type:'—' };
-    const d2   = dutiesMap[ds+'_s2'] || { doctor_name:'', shift_type:'—' };
-    const hasFull = d1.shift_type==='FULL' || d2.shift_type==='FULL';
-    const nt   = (notesMap[ds]||'').replace(/"/g,'&quot;');
+  let html='';
+  for(let day=1;day<=days;day++){
+    const dt  =new Date(y,m,day);
+    const dow =dt.getDay();
+    const ds  =fmtDate(y,m,day);
+    const d1  =dutiesMap[ds+'_s1']||{doctor_name:'',shift_type:'—'};
+    const d2  =dutiesMap[ds+'_s2']||{doctor_name:'',shift_type:'—'};
+    const hasFull=d1.shift_type==='FULL'||d2.shift_type==='FULL';
+    const nt  =(notesMap[ds]||'').replace(/"/g,'&quot;');
  
-    let cls = '';
-    if (ds===todayStr)   cls = 'today-row';
-    else if (dow===0)    cls = 'sunday';
-    if (hasFull) cls += (cls ? ' ' : '') + 'has-full';
+    let cls=ds===todayStr?'today-row':dow===0?'sunday':'';
+    if(hasFull) cls+=(cls?' ':'')+'has-full';
  
-    html += `<tr class="${cls}">
+    const pdoHtml=buildPdoHtml(ds);
+ 
+    html+=`<tr class="${cls}" data-date="${ds}">
       <td class="date-cell">${String(day).padStart(2,'0')}.${String(m+1).padStart(2,'0')}.${String(y).slice(2)}</td>
       <td class="day-cell">${DAYS_SHORT[dow]}</td>
       <td class="duty-cell"><div class="duty-wrap">
@@ -489,19 +631,21 @@ function render() {
         <select class="doc-select" onchange="handleDocChange(this,'${ds}','s2')">${mkDoc(d2.doctor_name)}</select>
         <select class="shift-select${sCls(d2.shift_type)}" onchange="handleShiftChange(this,'${ds}','s2')">${mkShift(d2.shift_type)}</select>
       </div></td>
-      <td class="note-cell"><input class="note-input" type="text" placeholder="camp / remarks…" value="${nt}" onchange="handleNoteChange(this,'${ds}')"/></td>
+      <td class="pdo-cell">${pdoHtml}</td>
+      <td class="note-cell"><input class="note-input" type="text" placeholder="remarks…" value="${nt}" onchange="handleNoteChange(this,'${ds}')"/></td>
     </tr>`;
   }
-  document.getElementById('tableBody').innerHTML = html;
+  document.getElementById('tableBody').innerHTML=html;
 }
  
-document.getElementById('docInput').addEventListener('keydown', e => { if(e.key==='Enter') addDoctor(); });
+document.getElementById('docInput').addEventListener('keydown',e=>{if(e.key==='Enter')addDoctor();});
  
-(async () => {
-  loader(true, '');
-  await Promise.all([loadDoctors(), loadMonthData()]);
+(async()=>{
+  loader(true,'');
+  await Promise.all([loadDoctors(),loadMonthData()]);
   loader(false);
   renderChips();
+  updateSummary();
   render();
 })();
 </script>
